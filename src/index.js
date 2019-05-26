@@ -48,10 +48,6 @@ function returnFnResult(fn) {
     return result;
 }
 
-returnFnResult(function(someArgument) {
-    return someArgument;
-});
-
 /*
  Задание 4:
 
@@ -65,7 +61,10 @@ returnFnResult(function(someArgument) {
    console.log(f()); // выведет 12
    console.log(f()); // выведет 13
  */
-function returnCounter(number) {
+function returnCounter(number = 0) {
+    return function() {
+        return ++number;
+    }
 }
 
 /*
@@ -102,7 +101,10 @@ function returnArgumentsArray() {
 
    console.log(newSum()) выведет 6
  */
-function bindFunction(fn) {
+function bindFunction(fn, ...args) {
+    return function() {
+        return fn(...args);
+    }
 }
 
 export {
