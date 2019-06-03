@@ -3,26 +3,54 @@
 /*
  Задание 1:
 
- 1.1: Функция принимает массив и фильтрующую фукнцию и должна вернуть true или false
+ 1.1: Функция принимает массив и фильтрующую функцию и должна вернуть true или false
  Функция должна вернуть true только если fn вернула true для всех элементов массива
 
  1.2: Необходимо выбрасывать исключение в случаях:
    - array не массив или пустой массив (с текстом "empty array")
    - fn не является функцией (с текстом "fn is not a function")
 
- Зарпещено использовать встроенные методы для работы с массивами
-
+ Запрещено использовать встроенные методы для работы с массивами
  Пример:
    isAllTrue([1, 2, 3, 4, 5], n => n < 10) // вернет true
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
 function isAllTrue(array, fn) {
+    if (!(array instanceof Array) || array.length == 0) {
+        throw new Error('empty array');
+    } else if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    var newArray = [],
+        j = 0,
+        result = 1;
+
+    for (var i = 0; i < array.length; i++) {
+        if (fn(array[i]) == true) {
+            newArray[j] = true;
+            j++;
+        } else {
+            newArray[j] = false;
+            j++;
+        }
+    }
+
+    for (var item of newArray) {
+        result *= item;
+    }
+
+    if (result == 1) {
+        return true;
+    }
+
+    return false;
 }
 
 /*
  Задание 2:
 
- 2.1: Функция принимает массив и фильтрующую фукнцию и должна вернуть true или false
+ 2.1: Функция принимает массив и фильтрующую функцию и должна вернуть true или false
  Функция должна вернуть true если fn вернула true хотя бы для одного из элементов массива
 
  2.2: Необходимо выбрасывать исключение в случаях:
@@ -36,6 +64,35 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
+    if (!(array instanceof Array) || array.length == 0) {
+        throw new Error('empty array');
+    } else if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    var newArray = [],
+        j = 0,
+        result = 0;
+
+    for (var i = 0; i < array.length; i++) {
+        if (fn(array[i]) == true) {
+            newArray[j] = true;
+            j++;
+        } else {
+            newArray[j] = false;
+            j++;
+        }
+    }
+
+    for (var item of newArray) {
+        result += item;
+    }
+
+    if (result > 0) {
+        return true;
+    }
+
+    return false;
 }
 
 /*
@@ -50,6 +107,22 @@ function isSomeTrue(array, fn) {
    - fn не является функцией (с текстом "fn is not a function")
  */
 function returnBadArguments(fn) {
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    }
+
+    var argumentsArr = [...arguments].slice(1),
+        exceptionArr = [];
+
+    for (var arrayEl of argumentsArr) {
+        try {
+            fn(arrayEl)
+        } catch (error) {
+            exceptionArr.push(arrayEl);
+        }
+    }
+
+    return exceptionArr;
 }
 
 /*
@@ -69,7 +142,60 @@ function returnBadArguments(fn) {
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
+function calculator(number = 0) {
+    if (typeof number !== 'number') {
+        throw new Error('number is not a number');
+    }
+
+    return ({
+        sum: function () {
+            var arr1 = [];
+
+            for (var i = 0; i < arguments.length; i++) {
+                arr1.push(arguments[i]);
+            }
+
+            return arr1.reduce(function (sum, current) {
+                return sum + current;
+            }, number);
+        },
+        dif: function () {
+            var arr1 = [];
+
+            for (var i = 0; i < arguments.length; i++) {
+                arr1.push(arguments[i]);
+            }
+
+            return arr1.reduce(function (sum, current) {
+                return sum - current;
+            }, number);
+        },
+        div: function () {
+            var arr1 = [];
+
+            for (var i = 0; i < arguments.length; i++) {
+                arr1.push(arguments[i]);
+                if (arguments[i] === 0) {
+                    throw new Error('division by 0');
+                }
+            }
+
+            return arr1.reduce(function (sum, current) {
+                return sum / current;
+            }, number);
+        },
+        mul: function () {
+            var arr1 = [];
+
+            for (var i = 0; i < arguments.length; i++) {
+                arr1.push(arguments[i]);
+            }
+
+            return arr1.reduce(function (sum, current) {
+                return sum * current;
+            }, number);
+        },
+    })
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
