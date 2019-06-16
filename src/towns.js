@@ -37,42 +37,42 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
-  var townsAddr = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
+    var townsAddr = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
 
-  var promise = new Promise(function(resolve) {
-      var xhr = new XMLHttpRequest(),
-          result;
+    var promise = new Promise(function(resolve) {
+        var xhr = new XMLHttpRequest(),
+            result;
 
-      xhr.open('GET', townsAddr, true);
+        xhr.open('GET', townsAddr, true);
 
-      xhr.send();
+        xhr.send();
 
-      xhr.onreadystatechange = function() {
-          if (this.readyState != 4) {
-              return;
-          }
+        xhr.onreadystatechange = function() {
+            if (this.readyState != 4) {
+                return;
+            }
 
-          if (this.status != 200) {
-              console.log(this.status + ': ' + this.statusText)
-          } else {
-              result = JSON.parse(this.responseText).sort(function(a, b) {
-                  if (a.name < b.name) {
-                      return -1;
-                  }
+            if (this.status != 200) {
+                console.log(this.status + ': ' + this.statusText)
+            } else {
+                result = JSON.parse(this.responseText).sort(function(a, b) {
+                    if (a.name < b.name) {
+                        return -1;
+                    }
 
-                  if (a.name > b.name) {
-                      return 1;
-                  }
+                    if (a.name > b.name) {
+                        return 1;
+                    }
 
-                  return 0;
-              });
+                    return 0;
+                });
 
-              resolve(result);
-          }
-      };
-  });
+                resolve(result);
+            }
+        };
+    });
 
-  return promise;
+    return promise;
 }
 
 /*
@@ -87,6 +87,11 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+    if (full.search(new RegExp(chunk, 'i')) == -1) {
+        return false;
+    }
+
+    return true;
 }
 
 /* Блок с надписью "Загрузка" */
