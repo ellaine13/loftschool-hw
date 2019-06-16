@@ -37,6 +37,42 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
+  var townsAddr = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
+
+  var promise = new Promise(function(resolve) {
+      var xhr = new XMLHttpRequest(),
+          result;
+
+      xhr.open('GET', townsAddr, true);
+
+      xhr.send();
+
+      xhr.onreadystatechange = function() {
+          if (this.readyState != 4) {
+              return;
+          }
+
+          if (this.status != 200) {
+              console.log(this.status + ': ' + this.statusText)
+          } else {
+              result = JSON.parse(this.responseText).sort(function(a, b) {
+                  if (a.name < b.name) {
+                      return -1;
+                  }
+
+                  if (a.name > b.name) {
+                      return 1;
+                  }
+
+                  return 0;
+              });
+
+              resolve(result);
+          }
+      };
+  });
+
+  return promise;
 }
 
 /*
