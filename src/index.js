@@ -34,7 +34,7 @@ function delayPromise(seconds) {
 function loadAndSortTowns() {
     var townsAddr = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
 
-    var promise = new Promise(function(resolve) {
+    var promise = new Promise(function(resolve, reject) {
         var xhr = new XMLHttpRequest(),
             result;
 
@@ -48,7 +48,7 @@ function loadAndSortTowns() {
             }
 
             if (this.status != 200) {
-                console.log(this.status + ': ' + this.statusText)
+                reject();
             } else {
                 result = JSON.parse(this.responseText).sort(function(a, b) {
                     if (a.name < b.name) {

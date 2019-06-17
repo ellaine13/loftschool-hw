@@ -30,6 +30,8 @@
  */
 const homeworkContainer = document.querySelector('#homework-container');
 
+let townsArr = [];
+
 /*
  Функция должна вернуть Promise, который должен быть разрешен с массивом городов в качестве значения
 
@@ -37,11 +39,11 @@ const homeworkContainer = document.querySelector('#homework-container');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
-    var townsAddr = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
+    const townsAddr = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
 
-    var promise = new Promise(function(resolve) {
-        var xhr = new XMLHttpRequest(),
-            result;
+    const promise = new Promise(function(resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        let result;
 
         xhr.open('GET', townsAddr, true);
 
@@ -53,7 +55,7 @@ function loadTowns() {
             }
 
             if (this.status != 200) {
-                console.log(this.status + ': ' + this.statusText)
+                reject();
             } else {
                 result = JSON.parse(this.responseText).sort(function(a, b) {
                     if (a.name < b.name) {
@@ -74,6 +76,17 @@ function loadTowns() {
 
     return promise;
 }
+
+loadTowns().then(function(result) {
+    // Скрываем надпись "Загрузка..."
+    loadingBlock.classList.add('is-hidden');
+
+    // Показываем блок с результатами
+    filterBlock.style.display = 'block';
+
+    // Записываем массив городов в глобальную переменную townsArr
+    townsArr = result;
+});
 
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
@@ -105,6 +118,23 @@ const filterResult = homeworkContainer.querySelector('#filter-result');
 
 filterInput.addEventListener('keyup', function() {
     // это обработчик нажатия кливиш в текстовом поле
+    filterResult.innerHTML = '';
+
+    let fragment = document.createDocumentFragment();
+
+    for (const town of townsArr) {
+        if (isMatching(town.name, this.value)) {
+            const resultItem = document.createElement('div');
+
+            resultItem.classList.add('filter-result-item');
+            resultItem.textContent = town.name;
+            fragment.appendChild(resultItem);
+        }
+    }
+
+    if (this.value !== '') {
+        filterResult.appendChild(fragment);
+    }
 });
 
 export {
