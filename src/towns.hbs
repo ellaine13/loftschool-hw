@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{htmlWebpackPlugin.options.title}}</title>
+    <style>
+        #homework-container {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #loading-block.is-hidden {
+            display: none;
+        }
+
+        #filter-input {
+            padding: 4px 9px;
+            font-size: 18px;
+            color: #222;
+        }
+
+        #filter-result {
+            padding: 6px 0;
+        }
+
+        .filter-result-item {
+            padding: 4px 9px;
+        }
+    </style>
+</head>
+<body>
+<div id="homework-container">
+    {{> "./towns-content.hbs"}}
+</div>
+</body>
+</html>
