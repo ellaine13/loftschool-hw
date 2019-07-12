@@ -43,10 +43,89 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+var cookies = {},
+    filterCookies;
+
 filterNameInput.addEventListener('keyup', function() {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    cookiesFilter();
+
+    if (filterNameInput.value == '') {
+        createTable(cookies);
+    } else {
+        createTable(filterCookies);
+    }
 });
 
-addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
+function cookiesFilter() {
+    filterCookies = {};
+
+    for (var cookie in cookies) {
+        if (cookies.hasOwnProperty(cookie) && isInclude(cookie, filterNameInput.value) || isInclude(cookies[cookie], filterNameInput.value)) {
+            filterCookies[cookie] = cookies[cookie];
+        }
+    }
+}
+
+function isInclude(full, chunk) {
+    return full.toUpperCase().includes(chunk.toUpperCase());
+}
+
+window.addEventListener('load', () => {
+    cookies = parseCookie();
+    createTable(cookies);
 });
+
+function createTable(tableCookies) {
+    listTable.textContent = '';
+
+    for (var cookie in tableCookies) {
+        if (tableCookies.hasOwnProperty(cookie)) {
+            listTable.appendChild(document.createElement('tr'));
+            listTable.lastChild.appendChild(document.createElement('th')).textContent = cookie;
+            listTable.lastChild.appendChild(document.createElement('th')).textContent = tableCookies[cookie];
+            listTable.lastChild.appendChild(document.createElement('th')).appendChild(document.createElement('button')).textContent = 'Удалить';
+            listTable.lastChild.lastChild.firstChild.addEventListener('click', () => {
+                delete cookies[cookie];
+                delete tableCookies[cookie];
+                deleteCookie(cookie);
+                createTable(tableCookies);
+            });
+        }
+    }
+}
+
+function deleteCookie(cookieName) {
+    var cookieDate = new Date();
+
+    cookieDate.setTime(cookieDate.getTime() - 1);
+    document.cookie = cookieName += '=; expires=' + cookieDate.toGMTString();
+}
+
+addButton.addEventListener('click', () => {
+    if (addNameInput.value != '' && addValueInput.value != '') {
+        document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+        cookies = parseCookie();
+        cookies[addNameInput.value] = addValueInput.value;
+
+        if (cookies.hasOwnProperty(addNameInput.value) && !isInclude(addValueInput.value, filterNameInput.value)) {
+            delete filterCookies[addNameInput.value];
+            createTable(filterCookies);
+        } else if (isInclude(addNameInput.value, filterNameInput.value) || isInclude(addValueInput.value, filterNameInput.value)) {
+            cookiesFilter();
+            createTable(filterCookies);
+        }
+    }
+});
+
+function parseCookie() {
+    if (document.cookie) {
+        return document.cookie.split('; ').reduce((prev, current) => {
+            const [name, value] = current.split('=');
+
+            prev[name] = value;
+
+            return prev;
+        }, {});
+    }
+}
+
