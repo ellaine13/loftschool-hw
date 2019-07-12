@@ -81,9 +81,9 @@ function createTable(tableCookies) {
     for (var cookie in tableCookies) {
         if (tableCookies.hasOwnProperty(cookie)) {
             listTable.appendChild(document.createElement('tr'));
-            listTable.lastChild.appendChild(document.createElement('th')).textContent = cookie;
-            listTable.lastChild.appendChild(document.createElement('th')).textContent = tableCookies[cookie];
-            listTable.lastChild.appendChild(document.createElement('th')).appendChild(document.createElement('button')).textContent = 'Удалить';
+            listTable.lastChild.appendChild(document.createElement('td')).textContent = cookie;
+            listTable.lastChild.appendChild(document.createElement('td')).textContent = tableCookies[cookie];
+            listTable.lastChild.appendChild(document.createElement('td')).appendChild(document.createElement('button')).textContent = 'Удалить';
             listTable.lastChild.lastChild.firstChild.addEventListener('click', () => {
                 delete cookies[cookie];
                 delete tableCookies[cookie];
